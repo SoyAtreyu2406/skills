@@ -682,9 +682,13 @@ Reglas:
 - El contenido fuera de cualquier sección va sin indentación.
 - Los bloques introducidos por una frase terminada en `:` se indentizan
   un nivel respecto de esa frase.
-- Las líneas internas de salidas (`>`), código, configuración y árboles
-  conservan su indentación original; solo se agrega el nivel externo del
-  bloque y el prefijo del marcador.
+- Las líneas internas de salidas (`>`) conservan su indentación
+  original; solo se agrega el nivel externo del bloque y el prefijo del
+  marcador.
+- El código y las sentencias agrupadas (scripts, procedimientos,
+  transacciones) NO reciben indentación externa: se conservan como una
+  unidad inmutable, alineados a columna 0 respecto de su contenido
+  interno (ver "EXCEPCIONES DE INDENTACIÓN").
 
 Ejemplo:
 
@@ -741,40 +745,117 @@ indentación estructural de la nota (2 espacios por nivel jerárquico)
 indentación que pertenece al contenido original (se preserva tal cual)
 ```
 
-Preservar exactamente la indentación original de:
+### Los bloques técnicos se preservan
 
-- código fuente;
-- árboles de directorios;
+Una vez identificado un bloque técnico (código, configuración, estructura
+o salida), no agregar, eliminar ni modificar espacios, indentación
+interna, saltos de línea, comillas, comillas triples, comentarios,
+sintaxis ni ningún otro carácter de su contenido. La indentación
+necesaria para representar la jerarquía del documento debe aplicarse al
+bloque como unidad, sin alterar su contenido interno.
+
+Esto aplica a:
+
+- código fuente (Python, JS, PHP, etc.);
+- scripts y sentencias agrupadas (SQL, shell, procedimientos,
+  transacciones);
 - archivos de configuración;
-- variables de entorno;
+- variables de entorno (`.env`);
 - JSON;
 - YAML;
 - XML;
-- SQL;
-- comandos multilínea;
-- salidas de comandos;
+- INI;
+- árboles de directorios;
 - ejemplos técnicos cuya indentación tenga significado.
 
-La indentación estructural solo agrega un nivel externo uniforme cuando
-una frase introduce el bloque mediante `:`; nunca modifica la
-indentación interna de cada línea.
+En estos bloques **no se modifica absolutamente nada** de su contenido
+interno: indentación, espacios, saltos de línea, comillas y la posición
+de cada línea respecto de las demás.
+
+### El código es inmutable y no recibe indentación externa
+
+Dentro de esa preservación, el **código** (scripts, sentencias agrupadas,
+funciones) tiene un tratamiento especial: además de conservar su
+contenido interno intacto, **no se le agrega indentación externa**. El
+bloque se entrega tal cual, alineado a columna 0. Las cercas ``` que
+delimitan el bloque no forman parte del código.
+
+Esto se debe a que el código puede consumirse o renderizarse con
+delimitadores, y los espacios que el formato agregara delante podrían
+alterar su significado o su lectura. Los árboles, la configuración y las
+salidas sí conservan su indentación externa visual (ver "BLOQUES
+INTRODUCIDOS POR DOS PUNTOS"), ya que esa indentación no altera su
+estructura.
+
+### Cómo presentar la frase introductoria (código)
+
+La frase que introduce el bloque de código (terminada en `:`) va a columna
+0. El bloque se sitúa debajo, también a columna 0 respecto de su
+contenido interno, sin que la skill añada indentación externa. La única
+separación entre frase y bloque es un renglón vacío.
 
 Ejemplo:
 
 ```text
 El código que estoy probando es:
 
-  function sumar(a, b) {
+function sumar(a, b) {
   const resultado = a + b;
   return resultado;
-  }
+}
 
-  console.log(sumar(10, 20));
+console.log(sumar(10, 20));
 ```
 
-Si el contenido técnico ya posee indentación propia, conservarla
-exactamente como aparece en el original: solo se agrega el nivel externo
-que introduce el `:`, sin re-indentar las líneas internas.
+El contenido técnico se conserva exactamente como en el original, incluso
+si alguna de sus líneas está alineada a columna 0. Esto incluye el texto
+multilínea dentro de un f-string:
+
+```text
+El código es:
+
+def generar_mensaje(nombre):
+    """
+    Genera un mensaje de bienvenida para el usuario.
+    """
+    mensaje = f"""
+Hola {nombre},
+bienvenido al sistema.
+Tu cuenta fue creada correctamente.
+"""
+    return mensaje
+
+print(generar_mensaje("Damian"))
+```
+
+Las líneas del texto multilínea quedan menos indentadas que el resto del
+código porque así estaban en el original: es preservación fiel, no un
+error del formato.
+
+### Código en una sola línea separado en un bloque
+
+Este es el **único caso** en el que el formato modifica la estructura
+interna del código.
+
+Cuando el código original aparece en una **sola línea** y conviene
+presentarlo como bloque multilínea, no hay indentación original que
+preservar: la indentación interna se agrega según la estructura del
+código para que se lea bien.
+
+```text
+El código que estoy probando es:
+
+function sumar(a, b) {
+  const resultado = a + b;
+  return resultado;
+}
+
+console.log(sumar(10, 20));
+```
+
+No se introducen símbolos nuevos ni se cambian valores: solo se separan
+las líneas y se indentan los bloques internos del código. El resultado se
+entrega también a columna 0.
 
 ## BLOQUES INTRODUCIDOS POR DOS PUNTOS
 
@@ -836,6 +917,34 @@ se transforma visualmente en:
 
 No se modifica su estructura; simplemente se agrega un nivel externo de
 indentación.
+
+### Excepción: bloques de código
+
+Esta regla de indentación externa NO se aplica a los bloques de código
+(scripts, sentencias agrupadas, funciones, código fuente). Esos bloques
+se preservan como una unidad inmutable, sin indentación externa, alineados
+a columna 0 respecto de su contenido interno (ver "EXCEPCIONES DE
+INDENTACIÓN"). El contenido de configuración, JSON, YAML, XML y árboles
+conserva su indentación externa visual porque esta no altera su
+estructura. La frase que introduce el código queda a columna 0 y el
+bloque debajo, separado por un renglón vacío.
+
+```text
+El código es:
+
+def generar_mensaje(nombre):
+    """
+    Genera un mensaje de bienvenida para el usuario.
+    """
+    mensaje = f"""
+Hola {nombre},
+bienvenido al sistema.
+Tu cuenta fue creada correctamente.
+"""
+    return mensaje
+
+print(generar_mensaje("Damian"))
+```
 
 ## LISTAS INFORMATIVAS
 
@@ -1050,6 +1159,35 @@ $ ipconfig
 Mantener el comando exactamente como aparece. No cambiar argumentos,
 parámetros, mayúsculas, minúsculas, rutas, variables, valores u opciones.
 
+### Comandos sueltos vs. bloques de código
+
+El `$` se reserva para un **comando único y ejecutable de una sola
+sentencia** (una línea de shell, un TRUNCATE, un UPDATE, etc.).
+
+No usar `$` para marcar un **bloque de código computable esencialmente
+como una unidad**: un script SQL, un script de shell, un procedimiento,
+una transacción (`START TRANSACTION ... COMMIT`), un bloque envuelto en
+llaves, una función o cualquier agrupación donde varias líneas dependen
+entre sí y deben entenderse (y ejecutarse) juntas.
+
+Para detectarlo, preguntarse:
+
+```text
+¿Estas líneas funcionan/leen/se ejecutan como una sola entidad
+(una transacción, un script, un procedimiento), o son comandos
+independientes que se ejecutan por separado?
+```
+
+- Si funcionan como una unidad → bloque de código: NO anteponer `$` a
+  cada línea. El código queda literal, preservado como unidad inmutable a
+  columna 0 y sin símbolos en su interior.
+- Si son comandos sueltos e independientes entre sí → cada uno con `$`.
+
+Rebasar bloques que ya delimitan una unidad.
+
+No convertir un `START TRANSACTION ... COMMIT` en varias líneas `$`
+aunque en el original cada sentencia apareciera en una línea propia.
+
 ## SALIDA DE COMANDOS
 
 La salida de comandos utiliza:
@@ -1224,16 +1362,40 @@ No corregir código.
 No traducir código.
 No agregar símbolos de la gramática visual dentro del código.
 
-Todo bloque de código debe delimitarse con cercas ``` (sin indicar
-lenguaje, salvo que el original ya lo especifique), para diferenciarlo
-visualmente del resto del texto.
+Una vez detectado un bloque de código, no modificar su contenido interno:
+indentación, espacios, saltos de línea, comillas y comillas triples se
+conservan exactamente como en el original. El bloque es inmutable: no se
+le agrega indentación externa y se entrega alineado a columna 0 (ver
+"EXCEPCIONES DE INDENTACIÓN").
+
+Los bloques de código se presentan como texto plano, sin cercas ni
+símbolos de Markdown: el resultado debe seguir pareciendo una nota
+`.txt`, no código renderizado. No usar delimitadores de Markdown (```)
+para enmarcar el bloque. La frase que introduce el bloque queda a columna
+0 y el código debajo, a columna 0 respecto de su contenido interno,
+separado por un renglón vacío.
 
 ```text
-const url = "https://example.com";
-const port = 3000;
+El código que estoy probando es:
+
+function sumar(a, b) {
+  const resultado = a + b;
+  return resultado;
+}
+
+console.log(sumar(10, 20));
 ```
 
-debe permanecer exactamente así, envuelto en las cercas.
+El contenido interno del código no recibe indentación externa: esa es la
+diferencia con los bloques que sí la reciben (árboles, salidas, comandos
+sueltos, URLs). La inmutabilidad prevalece sobre la indentación
+estructural de la nota.
+
+Esto también aplica a **scripts y sentencias agrupadas** (SQL, shell,
+procedimientos, transacciones, etc.). Un bloque que funciona como una
+unidad NO lleva `$` en cada línea: va completo, literal y conserva su
+código tal cual (ver "Comandos sueltos vs. bloques de código" en
+COMANDOS).
 
 ## CONFIGURACIÓN
 
@@ -1410,9 +1572,18 @@ Antes de entregar el resultado comprobar:
 * ¿Las tablas conservan su estructura?
 * ¿Los árboles conservan su estructura?
 * ¿Los bloques de código conservan su sintaxis?
+* ¿El contenido interno de los bloques no fue modificado (indentación,
+  espacios, saltos de línea, comillas)?
 * ¿Los bloques de configuración conservan sus valores?
 * ¿No se modificaron rutas o nombres de archivos?
 * ¿No se modificaron comandos?
+* ¿Los bloques que son una unidad (scripts, transacciones, procedimientos)
+  NO llevan `$` en cada línea y quedan como texto literal, sin cercas?
+* ¿El `$` solo marca comandos sueltos e independientes, y no líneas
+  individuales de un mismo bloque?
+* ¿Los bloques de código se entregan sin indentación externa, preservados
+  como unidad inmutable a columna 0 (no se les agregaron 2 espacios que
+  alteren el contenido)?
 
 ## Fragmentación
 
