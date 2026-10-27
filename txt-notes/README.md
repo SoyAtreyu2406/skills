@@ -1,6 +1,35 @@
 # txt-notes
 
-Skill para reescribir, organizar y formatear anotaciones personales en texto plano (`.txt`). Mejora claridad y redacción, agrupa conceptos relacionados y aplica una gramática visual consistente, compacta y jerárquica, preservando siempre la información y los datos técnicos.
+Skill de IA para reescribir, organizar y formatear anotaciones personales y notas técnicas en texto plano (`.txt`).
+
+Mejora la claridad y la redacción, agrupa conceptos relacionados y aplica una gramática visual consistente, compacta y jerárquica, preservando siempre la información y los datos técnicos.
+
+## Para quién es
+
+Para quien guarda apuntes, tareas, decisiones, comandos y enlaces de sus proyectos en archivos `.txt` y quiere que se mantengan legibles y fáciles de recorrer con el tiempo.
+
+## Características
+
+- Jerarquía de títulos y secciones consistente.
+- Agrupación de ideas relacionadas, sin perder ni inventar información.
+- Bloques técnicos (comandos, salidas, código) con formato claro.
+- URLs preservadas exactamente como aparecen en el original.
+- Respuesta a preguntas conceptuales y definición de términos dudosos.
+- Reglas detalladas separadas en archivos de referencia, para mantener `SKILL.md` conciso.
+
+## Instalación
+
+1. Descargá el repositorio:
+
+```text
+git clone https://github.com/SoyAtreyu2406/skills.git
+```
+
+También podés usar el botón **Code → Download ZIP** de GitHub y descomprimirlo.
+
+2. Copiá la carpeta `txt-notes/` (con `SKILL.md`, `references/` y `examples/` adentro) al directorio de skills de tu asistente de IA. La ubicación depende de la herramienta; consultá su documentación.
+
+3. Reiniciá el asistente para que cargue la skill.
 
 ## Uso
 
