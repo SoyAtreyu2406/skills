@@ -21,12 +21,32 @@ La AI va a leer el archivo, reescribir el contenido para mejorarlo y aplicar el 
 | `[x]` | Tarea completada | Algo que ya se hizo |
 | `◐` | Tarea en progreso | Algo que está en curso |
 | `→` | Idea / acción / relación | Propuestas, consecuencias, aclaraciones |
+| `★` | Decisión tomada | Algo que ya quedó decidido |
+| `~` | Suposición | Dato no confirmado ("creo que...") |
 | `!` | Información importante | Advertencias o datos críticos |
 | `?` | Pregunta | Cuestiones que requieren investigación |
 | `$` | Comando ejecutable | Comandos de terminal |
 | `>` | Salida de comando | Resultado de ejecutar un comando |
 | `🔗` | URL independiente | Enlaces que aparecen solos |
 | `-` | Elemento de lista | Items informativos |
+
+## Respuestas a preguntas
+
+Si la nota tiene una pregunta conceptual o técnica sin respuesta, la skill la responde debajo con `→ Respuesta:` (y un ejemplo si ayuda). Las preguntas personales o de verificación se dejan sin responder.
+
+```text
+? ¿Qué es una landing?
+  → Respuesta: página web de una sola pantalla pensada para que el
+    visitante realice una acción concreta.
+```
+
+También define con `→ Definición:` los términos que marcaste como dudosos, compara opciones ("¿X o Y?") con ventajas y desventajas, y cita la fuente con `🔗` cuando busca en la web. Al final, una línea fuera de la nota resume qué agregó o consolidó.
+
+## Estructura
+
+- `SKILL.md`: flujo, gramática visual y validación.
+- `references/`: detalle de jerarquía, bloques técnicos, URLs y respuestas.
+- `examples/`: casos de antes/después y contraejemplos.
 
 ## Ejemplo
 
@@ -47,11 +67,10 @@ Crear la carpeta del proyecto y el repositorio Git ya está hecho. Todavía falt
   APLICACIÓN WEB · PRODUCTOS Y PEDIDOS
 ◆━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-▌ ARQUITECTURA
+Estoy armando una aplicación web para gestionar productos y pedidos. El
+frontend sería con Astro y Symfony quedaría para el backend.
 
-  Estoy armando una aplicación web para gestionar productos y pedidos. El frontend sería con Astro y Symfony quedaría para el backend. No sé todavía si hace falta React.
-
-  → ¿Realmente necesito React?
+? No sé todavía si hace falta React.
 
 
 ▌ TECNOLOGÍAS
@@ -66,10 +85,10 @@ Crear la carpeta del proyecto y el repositorio Git ya está hecho. Todavía falt
   - Git
   - MySQL
 
-  Tailwind todavía no está instalado, Symfony tampoco y Node.js tampoco.
+  Tailwind todavía no está instalado, Symfony tampoco.
 
 
-▌ ESTADO ACTUAL
+▌ PENDIENTE
 
   [x] Crear la carpeta del proyecto
   [x] Crear el repositorio Git
